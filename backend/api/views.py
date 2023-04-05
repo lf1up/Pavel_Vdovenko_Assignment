@@ -11,6 +11,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from users.models import User
 
 from api.serializers import RegisterSerializer
+from api.permissions import IsActive
 
 
 class RegisterView(generics.CreateAPIView):
