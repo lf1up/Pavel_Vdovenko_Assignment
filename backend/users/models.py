@@ -1,5 +1,6 @@
-from django.db import models
+from django.apps import apps
 from django.dispatch import receiver
+from django.db import models
 from django.db.models.signals import pre_save
 from django.core.validators import EmailValidator
 from django.contrib.auth.models import (
@@ -7,6 +8,7 @@ from django.contrib.auth.models import (
     UserManager,
     UnicodeUsernameValidator,
 )
+from django.contrib.auth.hashers import make_password
 from django.utils.translation import gettext_lazy as _
 
 
@@ -27,16 +29,27 @@ class City(models.Model):
 
 
 class CustomUserManager(UserManager):
-    def create_superuser(self, email, password, username=None, **extra_fields):
-        _username = username if username else email
+    def _create_user(self, username, email, password, **extra_fields):
+        """
+        Create and save a user with the given email, and password.
+        """
+        email = self.normalize_email(email)
 
+        GlobalUserModel = apps.get_model(
+            self.model._meta.app_label, self.model._meta.object_name
+        )
+        if username is not None:
+            username = GlobalUserModel.normalize_username(username)
+
+        user = self.model(username=username, email=email, **extra_fields)
+        user.password = make_password(password)
+        user.save(using=self._db)
+
+        return user
+
+    def create_superuser(self, email, password, username=None, **extra_fields):
         return self._create_user(
-            email=email,
-            password=password,
-            username=_username,
-            is_staff=True,
-            is_superuser=True,
-            **extra_fields
+            email, password, username, is_staff=True, is_superuser=True, **extra_fields
         )
 
 
@@ -65,6 +78,8 @@ class User(AbstractUser):
         blank=True,
     )
 
+    is_active = models.BooleanField(default=True)  # for possibility to deactivate user
+
     gender = models.CharField(max_length=150, null=True, blank=True)
     age = models.PositiveSmallIntegerField(null=True, blank=True)
 
@@ -72,11 +87,12 @@ class User(AbstractUser):
 
     objects = CustomUserManager()
 
+    def __str__(self):
+        return self.email
+
 
 @receiver(pre_save, sender=User)
 def give_default_username(sender, instance, *args, **kwargs):
-    if not instance.username:
-        instance.username = instance.email
     if not instance.first_name:
         instance.first_name = ""
     if not instance.last_name:

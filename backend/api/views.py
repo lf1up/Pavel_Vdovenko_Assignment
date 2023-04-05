@@ -1,6 +1,8 @@
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import generics
 from rest_framework import status
+from django.utils.translation import gettext_lazy as _
+
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -17,6 +19,52 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
 
+class GetTokenPairView(APIView):
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        try:
+            email = request.data.get("email", None)
+            username = request.data.get("username", None)
+            password = request.data["password"]
+
+            if username is None and email is None:
+                return Response(
+                    {
+                        "username": [_("This field is required.")],
+                        "email": [_("This field is required.")],
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            user = None
+            if email is not None:
+                user = User.objects.get(email=email)
+            elif username is not None:
+                user = User.objects.get(username=username)
+
+            if user.check_password(password):
+                refresh = RefreshToken.for_user(user)
+
+                return Response(
+                    {
+                        "refresh": str(refresh),
+                        "access": str(refresh.access_token),
+                    },
+                    status=status.HTTP_200_OK,
+                )
+            else:
+                return Response(
+                    {"password": [_("Unable to log in with provided credentials.")]},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+        except Exception as e:
+            print(e)
+            return Response(
+                {"message": "BAD REQUEST"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+
 class LogoutView(APIView):
     permission_classes = (IsAuthenticated,)
 
@@ -27,8 +75,7 @@ class LogoutView(APIView):
             token.blacklist()
 
             return Response({"message": "OK"}, status=status.HTTP_200_OK)
-        except Exception as e:
-            print(e)
+        except Exception:
             return Response(
                 {"message": "BAD REQUEST"}, status=status.HTTP_400_BAD_REQUEST
             )
