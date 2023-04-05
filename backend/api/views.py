@@ -3,6 +3,7 @@ from rest_framework import generics
 from rest_framework import status
 from django.utils.translation import gettext_lazy as _
 
+from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -10,7 +11,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from users.models import User
 
-from api.serializers import RegisterSerializer, ChangePasswordSerializer
+from api.serializers import RegisterSerializer, ChangePasswordSerializer, UpdateUserSerializer
 from api.permissions import IsActive
 
 
@@ -24,6 +25,12 @@ class ChangePasswordView(generics.UpdateAPIView):
     queryset = User.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = ChangePasswordSerializer
+
+
+class UpdateProfileView(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UpdateUserSerializer
 
 
 class GetTokenPairView(APIView):
@@ -74,7 +81,10 @@ class GetTokenPairView(APIView):
 
 
 class LogoutView(APIView):
-    permission_classes = (IsAuthenticated, IsActive,)
+    permission_classes = (
+        IsAuthenticated,
+        IsActive,
+    )
 
     def post(self, request):
         try:
