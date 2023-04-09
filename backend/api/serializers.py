@@ -112,8 +112,9 @@ class UpdateUserSerializer(serializers.ModelSerializer):
             "city",
         )
         extra_kwargs = {
-            "first_name": {"required": True},
-            "last_name": {"required": True},
+            "username": {"required": False},
+            "first_name": {"required": False},
+            "last_name": {"required": False},
             "gender": {"required": False},
             "age": {"required": False},
             "city": {"required": False},
@@ -144,14 +145,14 @@ class UpdateUserSerializer(serializers.ModelSerializer):
             )
 
         instance.email = validated_data["email"]
-        instance.username = validated_data["username"]
+        instance.username = validated_data.get("username", None)
 
-        instance.first_name = validated_data["first_name"]
-        instance.last_name = validated_data["last_name"]
+        instance.first_name = validated_data.get("first_name", None)
+        instance.last_name = validated_data.get("last_name", None)
 
-        instance.gender = validated_data["gender"]
-        instance.age = validated_data["age"]
-        instance.city_id = validated_data["city"]
+        instance.gender = validated_data.get("gender", None)
+        instance.age = validated_data.get("age", None)
+        instance.city_id = validated_data.get("city", None)
 
         instance.save()
 
