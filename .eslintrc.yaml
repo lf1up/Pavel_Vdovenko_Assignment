@@ -1,0 +1,58 @@
+root: true
+parser: '@typescript-eslint/parser'
+settings:
+  import/resolver:
+    typescript:
+      project:
+        - tsconfig.json
+        - frontend/tsconfig.json
+extends:
+  - airbnb
+  - airbnb-typescript
+  - plugin:react/jsx-runtime
+  - plugin:jest/recommended
+  - prettier
+env:
+  jest: true
+  browser: true
+  node: true
+  es6: true
+rules:
+  react/jsx-props-no-spreading: off
+  react/no-unescaped-entities: off
+  react/jsx-no-useless-fragment:
+    - error
+    - allowExpressions: true
+  react/require-default-props:
+    - warn
+    - functions: defaultArguments
+  # disable typescript rules which require type checking
+  # they read tsconfig.json and slow down the linting
+  '@typescript-eslint/dot-notation': off
+  '@typescript-eslint/no-implied-eval': off
+  '@typescript-eslint/no-throw-literal': off
+  '@typescript-eslint/return-await': off
+  no-underscore-dangle:
+    - error
+    - allow:
+        - __typename
+        - _username
+  import/no-extraneous-dependencies:
+    - error
+    - devDependencies:
+        [
+          'frontend/webpack.config.js',
+          'frontend/postcss.config.js',
+          'packages/icons/scripts/build.js',
+          '**/*.stories.tsx',
+        ]
+overrides:
+  - files: ['**/*.test.{js,jsx,ts,tsx}', 'jest-setup.ts']
+    rules:
+      import/no-extraneous-dependencies: off
+  - files: ['frontend/src/scenes/**/*.js']
+    rules:
+      jsx-a11y/label-has-associated-control:
+        - error
+        - controlComponents:
+            - InputField

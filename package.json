@@ -1,0 +1,43 @@
+{
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "build": "yarn workspace frontend run build && yarn workspace frontend run copy:all",
+    "format": "prettier --write .",
+    "check-format": "prettier --check .",
+    "lint": "yarn lint:eslint && yarn lint:style",
+    "lint:eslint": "eslint --report-unused-disable-directives --ext=.js,.jsx,.ts,.tsx frontend",
+    "lint:style": "stylelint --report-needless-disables '**/*.css'",
+    "install:githooks": "git config core.hooksPath .githooks"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "@typescript-eslint/parser": "^5.58.0",
+    "eslint": "^8.38.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-react": "^7.32.2",
+    "lint-staged": "^13.2.1",
+    "prettier": "^2.8.7",
+    "stylelint": "^15.4.0",
+    "stylelint-config-prettier": "^9.0.5",
+    "stylelint-config-standard": "^32.0.0",
+    "typescript": "^4.4.2"
+  },
+  "lint-staged": {
+    "*": [
+      "prettier --write --ignore-unknown"
+    ],
+    "backend/**/*.py": [
+      "black",
+      "flake8 --config backend/setup.cfg"
+    ]
+  },
+  "dependencies": {}
+}

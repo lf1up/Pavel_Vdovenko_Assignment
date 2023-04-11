@@ -1,0 +1,8 @@
+node_modules
+coverage
+
+backend/static
+frontend/build
+
+venv
+.venv

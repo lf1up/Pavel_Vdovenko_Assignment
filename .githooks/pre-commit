@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# exit as soon as something fails
+set -e
+
+yarn lint-staged
