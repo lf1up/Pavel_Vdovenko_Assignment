@@ -7,6 +7,7 @@
     "build": "yarn workspace frontend run build && yarn workspace frontend run copy:all",
     "format": "prettier --write .",
     "check-format": "prettier --check .",
+    "check-types": "yarn workspace frontend check-types",
     "lint": "yarn lint:eslint && yarn lint:style",
     "lint:eslint": "eslint --report-unused-disable-directives --ext=.js,.jsx,.ts,.tsx frontend",
     "lint:style": "stylelint --report-needless-disables '**/*.css'",
@@ -33,6 +34,9 @@
   "lint-staged": {
     "*": [
       "prettier --write --ignore-unknown"
+    ],
+    "*.{css,scss}": [
+      "stylelint"
     ],
     "backend/**/*.py": [
       "black",

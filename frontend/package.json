@@ -1,5 +1,5 @@
 {
-  "name": "salesapp",
+  "name": "frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -23,8 +23,10 @@
     "build": "react-scripts build",
     "copy:templates": "cp build/index.html ../backend/gui/templates/gui/index.html",
     "copy:static": "cp -r build/* ../backend/static/ && rm ../backend/static/index.html",
-    "copy:all": "npm run copy:templates && npm run copy:static",
+    "copy:all": "yarn run copy:templates && yarn run copy:static",
     "test": "react-scripts test",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf ./build/",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
