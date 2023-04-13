@@ -8,6 +8,7 @@ import Register from './Register'
 import Profile from './Profile'
 import ChangeProfile from './ChangeProfile'
 import ChangePassword from './ChangePassword'
+import NotFound from './NotFound'
 
 import 'bootstrap/dist/css/bootstrap.css'
 
@@ -23,20 +24,9 @@ const App = () => {
         <Route path="change-profile" element={<ChangeProfile />} />
         <Route path="change-password" element={<ChangePassword />} />
 
-        <Route path="*" element={<NoMatch />} />
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
-  )
-}
-
-const NoMatch = () => {
-  return (
-    <div>
-      <h2>Nothing to see here!</h2>
-      <p>
-        <Link to="/">Go to the home page</Link>
-      </p>
-    </div>
   )
 }
 

@@ -4,7 +4,6 @@ settings:
   import/resolver:
     typescript:
       project:
-        - tsconfig.json
         - frontend/tsconfig.json
 extends:
   - airbnb
@@ -50,7 +49,7 @@ overrides:
   - files: ['**/*.test.{js,jsx,ts,tsx}', 'jest-setup.ts']
     rules:
       import/no-extraneous-dependencies: off
-  - files: ['frontend/src/scenes/**/*.js']
+  - files: ['frontend/src/**/*.js']
     rules:
       jsx-a11y/label-has-associated-control:
         - error
