@@ -1,95 +1,94 @@
-import * as React from 'react'
-import { Routes, Route, Outlet, Link } from 'react-router-dom'
+import Cookies from 'js-cookie'
 
-export default function App() {
+import {
+  Routes,
+  Route,
+  Outlet,
+  Link,
+  Navigate,
+  useLocation,
+} from 'react-router-dom'
+
+import { Container } from 'react-bootstrap'
+import { Nav } from 'react-bootstrap'
+import { Navbar } from 'react-bootstrap'
+// import { NavDropdown } from 'react-bootstrap';
+
+import Home from './Home'
+import Dashboard from './Dashboard'
+import Login from './Login'
+import Register from './Register'
+import Profile from './Profile'
+import ChangeProfile from './ChangeProfile'
+import ChangePassword from './ChangePassword'
+
+import 'bootstrap/dist/css/bootstrap.css'
+
+const App = () => {
   return (
-    <div>
-      <h1>Basic Example</h1>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="profile" element={<Profile />} />
+        <Route path="change-profile" element={<ChangeProfile />} />
+        <Route path="change-password" element={<ChangePassword />} />
 
-      <p>
-        This example demonstrates some of the core features of React Router
-        including nested <code>&lt;Route&gt;</code>s,{' '}
-        <code>&lt;Outlet&gt;</code>s, <code>&lt;Link&gt;</code>s, and using a
-        "*" route (aka "splat route") to render a "not found" page when someone
-        visits an unrecognized URL.
-      </p>
-
-      {/* Routes nest inside one another. Nested route paths build upon
-            parent route paths, and nested route elements render inside
-            parent route elements. See the note about <Outlet> below. */}
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="about" element={<About />} />
-          <Route path="dashboard" element={<Dashboard />} />
-
-          {/* Using path="*"" means "match anything", so this route
-                acts like a catch-all for URLs that we don't have explicit
-                routes for. */}
-          <Route path="*" element={<NoMatch />} />
-        </Route>
-      </Routes>
-    </div>
+        <Route path="*" element={<NoMatch />} />
+      </Route>
+    </Routes>
   )
 }
 
-function Layout() {
+const Layout = () => {
+  const location = useLocation()
+  const accessToken = Cookies.get('access_token')
+
+  if (
+    !accessToken &&
+    location.pathname !== '/login' &&
+    location.pathname !== '/register'
+  ) {
+    return <Navigate to="/login" />
+  }
+
   return (
     <div>
-      {/* A "layout route" is a good place to put markup you want to
-          share across all the pages on your site, like navigation. */}
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/about">About</Link>
-          </li>
-          <li>
-            <Link to="/dashboard">Dashboard</Link>
-          </li>
-          <li>
-            <Link to="/nothing-here">Nothing Here</Link>
-          </li>
-        </ul>
-      </nav>
-
-      <hr />
-
-      {/* An <Outlet> renders whatever child route is currently active,
-          so you can think about this <Outlet> as a placeholder for
-          the child routes we defined above. */}
+      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+        <Container>
+          <Navbar.Brand href="/">📈 Sales App</Navbar.Brand>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav className="me-auto">
+              {/* <Nav.Link href="#features">Features</Nav.Link>
+              <Nav.Link href="#pricing">Pricing</Nav.Link>
+              <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
+                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+                <NavDropdown.Item href="#action/3.2">
+                  Another action
+                </NavDropdown.Item>
+                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item href="#action/3.4">
+                  Separated link
+                </NavDropdown.Item>
+              </NavDropdown> */}
+            </Nav>
+            <Nav>
+              <Nav.Link href="/login">Login</Nav.Link>
+              <Nav.Link href="/register">Register</Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
       <Outlet />
     </div>
   )
 }
 
-function Home() {
-  return (
-    <div>
-      <h2>Home</h2>
-    </div>
-  )
-}
-
-function About() {
-  return (
-    <div>
-      <h2>About</h2>
-    </div>
-  )
-}
-
-function Dashboard() {
-  return (
-    <div>
-      <h2>Dashboard</h2>
-    </div>
-  )
-}
-
-function NoMatch() {
+const NoMatch = () => {
   return (
     <div>
       <h2>Nothing to see here!</h2>
@@ -99,3 +98,5 @@ function NoMatch() {
     </div>
   )
 }
+
+export default App
