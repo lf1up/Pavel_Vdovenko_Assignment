@@ -11,6 +11,7 @@ import ChangePassword from './ChangePassword'
 import NotFound from './NotFound'
 
 import 'bootstrap/dist/css/bootstrap.css'
+import './App.css'
 
 const App = () => {
   return (

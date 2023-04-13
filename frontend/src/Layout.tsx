@@ -2,6 +2,8 @@ import Cookies from 'js-cookie'
 
 import { Outlet, Navigate, useLocation } from 'react-router-dom'
 
+import { ThemeProvider } from 'react-bootstrap'
+
 import { Container } from 'react-bootstrap'
 import { Nav } from 'react-bootstrap'
 import { Navbar } from 'react-bootstrap'
@@ -47,7 +49,12 @@ const Layout = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <Outlet />
+      <ThemeProvider
+        breakpoints={['xxxl', 'xxl', 'xl', 'lg', 'md', 'sm', 'xs', 'xxs']}
+        minBreakpoint="xxs"
+      >
+        <Outlet />
+      </ThemeProvider>
     </div>
   )
 }
