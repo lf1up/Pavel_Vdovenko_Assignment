@@ -22,7 +22,7 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "BROWSER=none react-scripts start",
     "build": "react-scripts build",
     "copy:templates": "cp build/index.html ../backend/gui/templates/gui/index.html",
     "copy:static": "cp -r build/* ../backend/static/ && rm ../backend/static/index.html",

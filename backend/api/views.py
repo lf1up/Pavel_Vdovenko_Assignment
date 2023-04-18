@@ -3,7 +3,6 @@ from rest_framework import generics
 from rest_framework import status
 from django.utils.translation import gettext_lazy as _
 
-from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -11,7 +10,11 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from users.models import User
 
-from api.serializers import RegisterSerializer, ChangePasswordSerializer, UpdateUserSerializer
+from api.serializers import (
+    RegisterSerializer,
+    ChangePasswordSerializer,
+    UpdateUserSerializer,
+)
 from api.permissions import IsActive
 
 
@@ -29,7 +32,10 @@ class ChangePasswordView(generics.UpdateAPIView):
 
 class UpdateProfileView(generics.UpdateAPIView):
     queryset = User.objects.all()
-    permission_classes = (IsAuthenticated, IsActive,)
+    permission_classes = (
+        IsAuthenticated,
+        IsActive,
+    )
     serializer_class = UpdateUserSerializer
 
 
@@ -74,9 +80,9 @@ class GetTokenPairView(APIView):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
         except Exception as e:
-            print(e)
             return Response(
-                {"message": "BAD REQUEST"}, status=status.HTTP_400_BAD_REQUEST
+                {"message": str(e)},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
 
